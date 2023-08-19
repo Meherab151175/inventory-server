@@ -39,19 +39,16 @@ const client = new MongoClient(uri, {
         version: ServerApiVersion.v1,
         strict: true,
         deprecationErrors: true,
-    }
+    },
+    useNewUrlParser:true,
+    useUnifiedTopology:true,
+    maxPoolSize:10
 });
 
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        // const database = client.db("productsDB");
-        // const userCollection = database.collection("users");
-        // const classesCollection = database.collection("classes");
-        // const cartCollection = database.collection("cart");
-        // const enrolledCollection = database.collection("enrolled");
-        // const paymentCollection = database.collection("payments");
-        // const appliedCollection = database.collection("applied");
+    //    const appliedCollection = database.collection("applied");
         const userCollection = client.db('U-PR').collection('users')
         const productsCollection = client.db('U-PR').collection('products')
         const cartCollection = client.db('U-PR').collection('cart')
@@ -59,7 +56,12 @@ async function run() {
         const paymentCollection = client.db('U-PR').collection('payments')
         const appliedCollection = client.db('U-PR').collection('applied')
         
-        client.connect();
+        client.connect((err)=>{
+            if(err){
+                console.error(err)
+                return;
+            }
+        });
 
         // Verify admin
         const verifyAdmin = async (req, res, next) => {
